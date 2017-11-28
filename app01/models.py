@@ -282,6 +282,10 @@ class CourseReview(models.Model):
     def __str__(self):
         return "%s-%s" % (self.enrolled_course.course, self.review)
 
+    class Meta:
+        verbose_name = "课程评价"
+        verbose_name_plural = "课程评价"
+
 
 class DegreeCourseReview(models.Model):
     """学位课程评价
@@ -373,6 +377,10 @@ class Article(models.Model):
     def __str__(self):
         return "%s-%s" % (self.source, self.title)
 
+    class Meta:
+        verbose_name = "文章资讯"
+        verbose_name_plural = "文章资讯"
+
 
 class Collection(models.Model):
     """收藏"""
@@ -386,6 +394,8 @@ class Collection(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        verbose_name = "收藏"
+        verbose_name_plural ="收藏"
         unique_together = ('content_type', 'object_id', 'account')
 
 
@@ -405,6 +415,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
+    class Meta:
+        verbose_name = "通用的评论表"
+        verbose_name_plural ="通用的评论表"
 
 
 class ScoreRule(models.Model):
@@ -430,6 +443,8 @@ class ScoreRule(models.Model):
         return "%s-%s:%s" % (self.get_rule_display(), self.get_score_type_display(), self.score)
 
     class Meta:
+        verbose_name = "积分规则"
+        verbose_name_plural = "积分规则"
         unique_together = ('rule', 'score_type')
 
 
@@ -459,6 +474,9 @@ class ScoreRecord(models.Model):
 
         # class Meta: 导师的更换 关联的enrolled_degree_course 是可以有多条惩罚记录的，不能unique_together
         #     unique_together = ('content_type', 'object_id', 'account', 'score_rule')
+    class Meta:
+        verbose_name = "积分奖惩记录"
+        verbose_name_plural = "积分奖惩记录"
 
 
 class CourseSchedule(models.Model):
@@ -471,6 +489,8 @@ class CourseSchedule(models.Model):
         return "%s - %s - %s " % (self.study_record, self.homework, self.recommend_date)
 
     class Meta:
+        verbose_name = "课程进度计划表"
+        verbose_name_plural = "课程进度计划表"
         unique_together = ('study_record', 'homework')
 
 
@@ -492,6 +512,7 @@ class EnrolledCourse(models.Model):
 
         # class Meta: 一个课程到期了，可以重新购买，所以不能联合唯一
         #     unique_together = ('account', 'course')
+    
 
 
 class DegreeRegistrationForm(models.Model):
