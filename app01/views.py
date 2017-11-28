@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework.views import APIView
-from app01.models import Account, Token, Course, CourseDetail
+from app01.models import Account, Token, Course, CourseDetail,CourseReview,OftenAskedQuestion
 from app01.utils.auth import LuffyAuthentication
 from app01.utils.commons import gen_token
 from django.core import serializers
@@ -71,6 +71,47 @@ class MyField(serializers.CharField):
 
         return ret
 
+class MyCouponField(serializers.CharField):
+    """
+    优惠券序列化
+    """
+    def get_attribute(self, instance):
+        coupon = instance.coupon.all()
+        return coupon
+    def to_representation(self, value):
+        ret = []
+        for row in value:
+            ret.append({'id':row.id,'name':row.name,'valid_begin_date':row.valid_begin_date,
+                        'valid_end_date':row.valid_end_date})
+        return ret
+
+# class OftenAskedQuestionField(serializers.CharField):
+#     def get_attribute(self, instance):
+#         ask = instance_oftenaskedquestion
+#         return ask
+#     def to_representation(self, value):
+#         ret = []
+#         for row in value:
+#             ret.append({'id':row.id,'question':row.question,'answer':answer})
+#         return ret
+    #
+class MyCourseChapterField(serializers.CharField):
+    """
+    课程章节
+    """
+    def get_attribute(self, instance):
+        chapters = instance.coursechapters.all()
+        return chapters
+    def to_representation(self, value):
+        ret = []
+        for row in value:
+            ret.append({'id':row.id,'chapter':row.chapter,'name':row.name,'summary':row.summary,
+                        'pub_date':row.pub_date})
+        return ret
+
+
+
+
 class MyPricefield(serializers.CharField):
     def get_attribute(self, instance):
         price_policy = instance.course.price_policy.all()
@@ -82,22 +123,55 @@ class MyPricefield(serializers.CharField):
         return ret
 
 
-class CourseSerialize(serializers.ModelSerializer):
-    level_name =serializers.CharField(source='get_level_display')
 
+
+
+class CourseSerialize(serializers.ModelSerializer):
+    course_type_name = serializers.CharField(source='get_course_type_display')
+    level_name =serializers.CharField(source='get_level_display')
+    status_name=serializers.CharField(source='get_status_display')
+    pub_date = serializers.DateField(format="%Y-%m-%d")
+    coupons = MyCouponField()
+    coursechapter = MyCourseChapterField()
+    erolledreview = serializers.SerializerMethodField()
+    # oftenaskedquestion = OftenAskedQuestionField()
+    oftenaskedquestion = serializers.SerializerMethodField()
+
+    # reviews=MyCourseReview()
     class Meta:
         model = Course
-        fields = ['id','name','course_img','sub_category','course_type','degree_course','brief',
-                  'level','pub_date','period','order','attachment_path','status','template_id','level_name']
-        # depth = 3 # 0 10
+        fields = ['id','name','course_img','sub_category','course_type_name','degree_course','brief',
+                  'pub_date','period','order','attachment_path',
+                  'template_id','level_name','status_name','coupons','coursechapter','erolledreview','oftenaskedquestion']
+        depth = 4 # 0 10
+
+    def get_erolledreview(self,obj):
+        ret =[]
+        objs = CourseReview.objects.filter(enrolled_course__course=obj)
+        for i in objs:
+            ret.append({'id':i.id,'review':i.review})
+        return  ret
+
+    def get_oftenaskedquestion(self,obj):
+        rett =[]
+        objss = OftenAskedQuestion.objects.filter(id=obj.id)
+        for i in objss:
+            rett.append({'id': i.id, 'question': i.question})
+        return rett
+
+
+
+
+
+
 class CourseDetailSerialize(serializers.ModelSerializer):
     # recommends=serializers.CharField(source='recommend_courses.all')
     teacherss=MyField()
     courseprices=MyPricefield()
+
     # recommends=MyField()
     class Meta:
         model = CourseDetail
-
         fields =['id','course','hours','course_slogan','video_brief_link','why_study',
                  'what_to_study_brief','career_improvement','prerequisite','teacherss',
                  'courseprices']
@@ -109,18 +183,20 @@ class CourseView(APIView):
     # throttle_classes = [LuffyAnonRateThrottle, LuffyUserRateThrottle]
 
     def get(self, request, *args, **kwargs):
-        res= {'code': 1000, 'msg': None}
+        # res= {'code': 1000, 'msg': None}
+        id=kwargs.get('pk')
         # id=request.GET.get("id")
-        # course_obj= CourseDetail.objects.filter(course=id).first()
-        course_obj= CourseDetail.objects.all().first()
-        print(course_obj)
+        course_obj= CourseDetail.objects.filter(course_id=id).first()
+        # course_obj= CourseDetail.objects.all().first()
+        # print(course_obj)
         ser = CourseDetailSerialize(instance=course_obj, many=False)
+        print(ser.data)
         return Response(ser.data)
 
 
 class CourseListView(APIView):
     def get(self,request,*args,**kwargs):
-        res= {'code': 1000, 'msg': None}
+        # res= {'code': 1000, 'msg': None}
         course_list = Course.objects.exclude(course_type=2)
         ser = CourseSerialize(instance=course_list,many=True)
         return Response(ser.data)

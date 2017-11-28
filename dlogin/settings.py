@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app01.apps.App01Config',
     'rest_framework',
-    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -129,48 +128,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-#配置允许跨域访问的域名
-CORS_ORIGIN_ALLOW_ALL = False
-
-# CORS_ORIGIN_WHITELIST = (
-# 
-#     'google.com',
-# 
-#     'http://127.0.0.1:8080',
-# 
-# )
-CORS_ORIGIN_WHITELIST = ()
-# CORS_ORIGIN_REGEX_WHITELIST = ('^(https?://)?(\w+.)?>google.com$', )
-# CORS_ORIGIN_REGEX_WHITELIST = ()
-
-CORS_ALLOW_METHODS = (
-
-    'GET',
-
-    'POST',
-
-    'PUT',
-
-    'PATCH',
-
-    'DELETE',
-
-    'OPTIONS'
-
-)
-
-CORS_ALLOW_HEADERS = (
-
-    'x-requested-with',
-
-    'content-type',
-
-    'accept',
-
-    'origin',
-
-    'authorization',
-
-    'x-csrftoken'
-
-)
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S.%fZ",
+}

@@ -96,7 +96,7 @@ class Course(models.Model):
     brief = models.TextField(verbose_name="课程概述", max_length=2048)
     level_choices = ((0, '初级'), (1, '中级'), (2, '高级'))
     level = models.SmallIntegerField(choices=level_choices, default=1)
-    pub_date = models.DateField(verbose_name="发布日期", blank=True, null=True)
+    pub_date = models.DateField(auto_now_add=True,verbose_name="发布日期", blank=True, null=True)
     period = models.PositiveIntegerField(verbose_name="建议学习周期(days)", default=7)
     order = models.IntegerField("课程顺序", help_text="从上一个课程数字往后排")
     attachment_path = models.CharField(max_length=128, verbose_name="课件路径", blank=True, null=True)
@@ -512,7 +512,9 @@ class EnrolledCourse(models.Model):
 
         # class Meta: 一个课程到期了，可以重新购买，所以不能联合唯一
         #     unique_together = ('account', 'course')
-    
+    class Meta:
+        verbose_name = "已报名课程"
+        verbose_name_plural = "已报名课程"
 
 
 class DegreeRegistrationForm(models.Model):
@@ -551,6 +553,10 @@ class DegreeRegistrationForm(models.Model):
     def __str__(self):
         return "%s" % self.enrolled_degree
 
+    class Meta:
+        verbose_name = "学位课程报名表"
+        verbose_name_plural = "学位课程报名表"
+
 
 class EnrolledDegreeCourse(models.Model):
     """已报名的学位课程"""
@@ -577,6 +583,8 @@ class EnrolledDegreeCourse(models.Model):
         return "%s:%s" % (self.account, self.degree_course)
 
     class Meta:
+        verbose_name = "已报名的学位课程"
+        verbose_name_plural = "已报名的学位课程"
         unique_together = ('account', 'degree_course')
 
 
@@ -619,6 +627,10 @@ class Coupon(models.Model):
 
         super(Coupon, self).save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = "优惠券生成规则"
+        verbose_name_plural = "优惠券生成规则"
+
 
 class CouponRecord(models.Model):
     """优惠券发放、消费纪录"""
@@ -634,6 +646,9 @@ class CouponRecord(models.Model):
     _coupon = GenericRelation("Coupon")
     # def __str__(self):
     #     return '%s-%s-%s' % (self.account, self.number, self.status)
+    class Meta:
+        verbose_name = "优惠券发放、消费纪录"
+        verbose_name_plural = "优惠券发放、消费纪录"
 
 
 class Order(models.Model):
@@ -653,6 +668,10 @@ class Order(models.Model):
 
     def __str__(self):
         return "%s" % self.order_number
+
+    class Meta:
+        verbose_name = "订单"
+        verbose_name_plural = "订单"
 
 
 class OrderDetail(models.Model):
@@ -674,6 +693,8 @@ class OrderDetail(models.Model):
 
     class Meta:
         # unique_together = ("order", 'course')
+        verbose_name = "订单详情"
+        verbose_name_plural = "订单详情"
         unique_together = ("order", 'content_type', 'object_id')
 
 
@@ -689,6 +710,8 @@ class StudyRecord(models.Model):
     status = models.SmallIntegerField(choices=status_choices, default=1)
 
     class Meta:
+        verbose_name = "学位课程的模块学习进度"
+        verbose_name_plural = "学位课程的模块学习进度"
         unique_together = ('enrolled_degree_course', 'course_module')
 
     def __str__(self):
@@ -699,6 +722,7 @@ class StudyRecord(models.Model):
             raise ValueError("学员要开通的模块必须与其报名的学位课程一致！")
 
         super(StudyRecord, self).save(*args, **kwargs)
+
 
 
 class HomeworkRecord(models.Model):
@@ -752,6 +776,8 @@ class HomeworkRecord(models.Model):
         return "%s %s" % (self.homework, self.student)
 
     class Meta:
+        verbose_name = "学员作业记录及成绩"
+        verbose_name_plural = "学员作业记录及成绩"
         unique_together = ("homework", "student")
 
 
@@ -767,6 +793,10 @@ class StuFollowUpRecord(models.Model):
 
     def __str__(self):
         return "%s --%s --%s" % (self.enrolled_degree_course, self.record, self.date)
+
+    class Meta:
+        verbose_name = "学员跟进记录"
+        verbose_name_plural = "学员跟进记录"
 
 
 class Question(models.Model):
@@ -793,6 +823,10 @@ class Question(models.Model):
 
         super(Question, self).save(*args, **kwargs)
 
+    class Meta:
+        verbose_name ="课程提问"
+        verbose_name_plural = "课程提问"
+
 
 class Answer(models.Model):
     """问题解答"""
@@ -806,6 +840,10 @@ class Answer(models.Model):
     def __str__(self):
         return "%s" % self.question
 
+    class Meta:
+        verbose_name ="问题解答"
+        verbose_name_plural = "问题解答"
+
 
 class AnswerComment(models.Model):
     """答案回复评论"""
@@ -818,6 +856,9 @@ class AnswerComment(models.Model):
 
     def __str__(self):
         return "%s - %s" % (self.account, self.comment)
+    class Meta:
+        verbose_name = "答案回复评论"
+        verbose_name_plural = "答案回复评论"
 
 
 class QACounter(models.Model):
@@ -831,6 +872,8 @@ class QACounter(models.Model):
     date = models.DateTimeField(auto_now=True)
 
     class Meta:
+        verbose_name = "问题和回答的赞同数量统计"
+        verbose_name_plural = "问题和回答的赞同数量统计"
         unique_together = ("content_type", 'object_id', "account")
 
 
@@ -841,6 +884,9 @@ class Tags(models.Model):
 
     def __str__(self):
         return self.name
+    class Meta:
+        verbose_name = "标签"
+        verbose_name_plural = "标签"
 
 
 class TransactionRecord(models.Model):
@@ -859,6 +905,9 @@ class TransactionRecord(models.Model):
 
     def __str__(self):
         return "%s" % self.transaction_number
+    class Meta:
+        verbose_name = "贝里交易纪录"
+        verbose_name_plural = "贝里交易纪录"
 
 
 class Notification(models.Model):
@@ -905,6 +954,10 @@ class Notification(models.Model):
     def __str__(self):
         return '%s-%s-%s' % (self.notify_obj, self.msg_type, self.notify_type)
 
+    class Meta:
+        verbose_name = "消息通知纪录"
+        verbose_name_plural = "消息通知纪录"
+
 
 class MentorGroup(models.Model):
     """导师组"""
@@ -915,6 +968,9 @@ class MentorGroup(models.Model):
 
     def __str__(self):
         return self.name
+    class Meta:
+        verbose_name = "导师组"
+        verbose_name_plural = "导师组"
 
 
 class Account(models.Model):
@@ -926,7 +982,6 @@ class Account(models.Model):
         blank=True,
         null=True
     )
-
     uid = models.CharField(max_length=64, unique=True)  # 与第3方交互用户信息时，用这个uid,以避免泄露敏感用户信息
     mobile = models.BigIntegerField(verbose_name="手机", unique=True, help_text="用于手机验证码登录")
     qq = models.CharField(verbose_name="QQ", max_length=64, blank=True, null=True, db_index=True)
@@ -1046,6 +1101,10 @@ class BulletScreen(models.Model):
     play_point = models.IntegerField()  # 发送弹幕的时间处于该课时视频的具体秒数
     date = models.DateTimeField(auto_now_add=True)  # 弹幕存储时间
 
+    class Meta:
+        verbose_name = "弹幕"
+        verbose_name_plural = "弹幕"
+
 
 class Feedback(models.Model):
     """用户反馈表"""
@@ -1059,6 +1118,11 @@ class Feedback(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "用户反馈表"
+        verbose_name_plural ="用户反馈表"
+
 class Token(models.Model):
     user=models.OneToOneField(Account)
     tk=models.CharField(max_length=64)
+

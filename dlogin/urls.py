@@ -19,9 +19,10 @@ from app01.views import AuthView,CourseView,CourseListView,IndexView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^login/',AuthView.as_view()),
-    url(r'^index/',IndexView.as_view()),
-    url(r'^course/',CourseView.as_view()),
-    url(r'^course_list/',CourseListView.as_view()),
+    url(r'^login/$',AuthView.as_view()),
+    url(r'^index/$',IndexView.as_view()),
+    url(r'^course_list/$',CourseListView.as_view()),
+    url(r'^course/(?P<pk>\d+)/$',CourseView.as_view()),
+
     # url(r'cors.html/',get_data),
 ]
