@@ -85,16 +85,7 @@ class MyCouponField(serializers.CharField):
                         'valid_end_date':row.valid_end_date})
         return ret
 
-# class OftenAskedQuestionField(serializers.CharField):
-#     def get_attribute(self, instance):
-#         ask = instance_oftenaskedquestion
-#         return ask
-#     def to_representation(self, value):
-#         ret = []
-#         for row in value:
-#             ret.append({'id':row.id,'question':row.question,'answer':answer})
-#         return ret
-    #
+
 class MyCourseChapterField(serializers.CharField):
     """
     课程章节
