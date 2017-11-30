@@ -47,12 +47,12 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
-    'app01.utils.mycors.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'app01.utils.mycors.CorsMiddleware',
 
 ]
 
@@ -173,3 +173,20 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken'
 
 )
+
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S.%fZ",
+    'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.URLPathVersioning',
+    'VERSION_PARAN':'version',
+    'DEFAULT_VERSION':'v1',
+    'ALLOWED_VERSION':['v1','v2'],
+    'UNAUTHENTICATED_USER':None,
+    'UNAUTHENTICATED_TOKEN':None,
+    'DEFAULT_THROTTLE_RATES':{
+        'luffy_anon':'10/m',
+        'luffy_user':'20/m'
+    }
+}
+
+
+

@@ -262,7 +262,6 @@ class CourseSection(models.Model):
         return "%s-%s" % (self.chapter, self.name)
 
 
-
 # ###############################
 
 class CourseReview(models.Model):
@@ -637,6 +636,7 @@ class Order(models.Model):
 class OrderDetail(models.Model):
     """订单详情"""
     order = models.ForeignKey("Order")
+
     content_type = models.ForeignKey(ContentType)  # 可关联普通课程或学位
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
