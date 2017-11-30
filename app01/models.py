@@ -406,7 +406,6 @@ class Comment(models.Model):
     def __str__(self):
         return self.content
 
-
 class ScoreRule(models.Model):
     """积分规则"""
     score_rule_choices = (
@@ -431,7 +430,6 @@ class ScoreRule(models.Model):
 
     class Meta:
         unique_together = ('rule', 'score_type')
-
 
 class ScoreRecord(models.Model):
     """积分奖惩记录"""
@@ -460,7 +458,6 @@ class ScoreRecord(models.Model):
         # class Meta: 导师的更换 关联的enrolled_degree_course 是可以有多条惩罚记录的，不能unique_together
         #     unique_together = ('content_type', 'object_id', 'account', 'score_rule')
 
-
 class CourseSchedule(models.Model):
     """课程进度计划表,针对学位课程，每开通一个模块，就为这个学员生成这个模块的推荐学习计划表，后面的奖惩均按此表进行"""
     study_record = models.ForeignKey("StudyRecord")
@@ -472,7 +469,6 @@ class CourseSchedule(models.Model):
 
     class Meta:
         unique_together = ('study_record', 'homework')
-
 
 class EnrolledCourse(models.Model):
     """已报名课程,不包括学位课程"""
@@ -492,7 +488,6 @@ class EnrolledCourse(models.Model):
 
         # class Meta: 一个课程到期了，可以重新购买，所以不能联合唯一
         #     unique_together = ('account', 'course')
-
 
 class DegreeRegistrationForm(models.Model):
     """学位课程报名表"""
@@ -530,7 +525,6 @@ class DegreeRegistrationForm(models.Model):
     def __str__(self):
         return "%s" % self.enrolled_degree
 
-
 class EnrolledDegreeCourse(models.Model):
     """已报名的学位课程"""
     account = models.ForeignKey("Account")
@@ -557,7 +551,6 @@ class EnrolledDegreeCourse(models.Model):
 
     class Meta:
         unique_together = ('account', 'degree_course')
-
 
 class Coupon(models.Model):
     """优惠券生成规则"""
@@ -597,7 +590,6 @@ class Coupon(models.Model):
             raise ValueError("close_date 优惠券领取结束时间必须晚于 open_date优惠券领取开始时间 ")
 
         super(Coupon, self).save(*args, **kwargs)
-
 
 class CouponRecord(models.Model):
     """优惠券发放、消费纪录"""
@@ -933,7 +925,7 @@ class Account(models.Model):
                                 verbose_name="个人头像")
     role_choices = ((0, '学员'), (1, '导师'), (2, '讲师'), (3, '管理员'))
     role = models.SmallIntegerField(choices=role_choices, default=0, verbose_name="角色")
-    # balance = models.PositiveIntegerField(default=0, verbose_name="可提现余额")
+    balance = models.PositiveIntegerField(default=0, verbose_name="可提现余额")
     # #此处通过transaction_record表就可以查到，所以不用写在这了
 
     memo = models.TextField('备注', blank=True, null=True, default=None)

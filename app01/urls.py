@@ -7,4 +7,6 @@ urlpatterns = [
     url(r'^course/',views.CourseDetailView.as_view()),
     url(r'^course/(?P<course_id>\d+)',views.CourseDetailView.as_view()),
     url(r'^course_list/',views.CourseListView.as_view()),
+    url(r'^create/$',views.CreateOrder.as_view()),
+    url(r'^verify/$',views.VerifyOrder.as_view()),
 ]

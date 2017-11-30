@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="db" uuid="e6c498c2-843c-49f1-8d22-325acce2cd7f">
-      <driver-ref>c293e47b-4b87-4229-824f-909bb6b8b39c</driver-ref>
+    <data-source source="LOCAL" name="db" uuid="ca0b6969-ce52-4528-9ef3-724bcb2e6ae2">
+      <driver-ref>216bf0e3-73c7-45d0-a737-9b19d94e27cf</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
       <remarks>SQLite</remarks>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:F:\协同开发\luffy_django\db.sqlite3</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/db.sqlite3</jdbc-url>
       <driver-properties>
         <property name="enable_load_extension" value="true" />
       </driver-properties>
